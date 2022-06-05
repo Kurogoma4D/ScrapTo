@@ -5,8 +5,29 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.net.Uri.encode
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -16,7 +37,7 @@ sealed class Result<out R> {
     data class Failure(val error: Throwable) : Result<Nothing>()
 }
 
-class ShareActivity : AppCompatActivity() {
+class ShareActivity : ComponentActivity() {
 
     companion object {
         const val TAG = "ShareActivity"
@@ -24,7 +45,33 @@ class ShareActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_share)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        setContent {
+            val systemUiController = rememberSystemUiController()
+
+            SideEffect {
+                systemUiController.setSystemBarsColor(
+                    color = Color.Transparent,
+                    darkIcons = true
+                )
+            }
+
+            MaterialTheme {
+                Box(
+                    modifier = Modifier
+                        .background(color = Color.Black.copy(alpha = 0.1f))
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        Modifier.size(48.dp)
+                    )
+                }
+            }
+        }
+
         val scrapboxName =
             MainActivity.mainSharedPreferences.getString(MainActivity.scrapboxKey, "") ?: ""
 
