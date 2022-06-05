@@ -29,6 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity-alias
+            android:name="MainActivityAlias"
+            android:targetActivity=".MainActivity" />
     </application>
 
 </manifest>
