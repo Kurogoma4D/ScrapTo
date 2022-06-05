@@ -1,5 +1,7 @@
 package dev.krgm4d.scrapto
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.net.Uri.encode
@@ -23,40 +25,45 @@ class ShareActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share)
+        val scrapboxName =
+            MainActivity.mainSharedPreferences.getString(MainActivity.scrapboxKey, "") ?: ""
+
         when (intent?.action) {
             Intent.ACTION_SEND -> {
-                handleText(intent)
+                handleText(scrapboxName, intent, this)
             }
             else -> {}
         }
 
     }
 
-    private fun handleText(intent: Intent) {
+    private fun handleText(scrapboxName: String, intent: Intent, activity: Activity) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let { urlString ->
             GlobalScope.launch {
                 when (val document = fetchHtmlTitle(urlString)) {
                     is Result.Success -> {
-                        processWithDocument(urlString, document.data)
+                        processWithDocument(scrapboxName, urlString, document.data)
+                        activity.finish()
                     }
                     is Result.Failure -> {
-                        openScrapbox(urlString, urlString)
+                        openScrapbox(scrapboxName, urlString, urlString)
+                        activity.finish()
                     }
                 }
             }
         }
     }
 
-    private fun processWithDocument(url: String, document: Document) {
+    private fun processWithDocument(scrapboxName: String, url: String, document: Document) {
         val title = document.title().trim()
-        openScrapbox(url, title)
+        openScrapbox(scrapboxName, url, title)
     }
 
-    private fun openScrapbox(url: String, title: String) {
+    private fun openScrapbox(scrapboxName: String, url: String, title: String) {
         val link = "[${url} ${title}]"
 
         val body = listOf("", link).joinToString("\n")
-        val openUrl = "https://scrapbox.io/kurogoma4d-lab/${encode(title)}?body=${body}"
+        val openUrl = "https://scrapbox.io/${scrapboxName}/${encode(title)}?body=${body}"
 
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(openUrl))
         startActivity(intent)

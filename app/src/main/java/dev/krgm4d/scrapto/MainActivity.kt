@@ -25,17 +25,18 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         const val scrapboxKey = "SCRAPBOX_KEY"
+        lateinit var mainSharedPreferences: SharedPreferences
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sharedPreferences = getPreferences(Context.MODE_PRIVATE)
+        mainSharedPreferences = getPreferences(Context.MODE_PRIVATE)
 
-        val defaultName = sharedPreferences.getString(scrapboxKey, "")
+        val defaultName = mainSharedPreferences.getString(scrapboxKey, "")
 
         setContent {
-            MainView(defaultName ?: "", sharedPreferences)
+            MainView(defaultName ?: "", mainSharedPreferences)
         }
     }
 }
