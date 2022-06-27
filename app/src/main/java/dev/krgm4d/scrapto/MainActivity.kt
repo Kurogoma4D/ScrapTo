@@ -1,6 +1,7 @@
 package dev.krgm4d.scrapto
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,15 +11,19 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.focusTarget
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -59,11 +64,16 @@ private fun MainView(
     val focusRequester = remember { FocusRequester() }
     val interactionSource = remember { MutableInteractionSource() }
     val scaffoldState = rememberScaffoldState()
+    val context = LocalContext.current
 
     MaterialTheme {
         Scaffold(
             topBar = {
-                TopAppBar(title = { Text("Scrap To") })
+                TopAppBar(title = { Text("Scrap To") }, actions = {
+                    IconButton(onClick = {context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))}) {
+                        Icon(Icons.Filled.Menu, contentDescription = "Licenses")
+                    }
+                })
             },
             modifier = Modifier
                 .clickable(
