@@ -27,21 +27,19 @@ import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
     companion object {
         const val scrapboxKey = "SCRAPBOX_KEY"
-        lateinit var mainSharedPreferences: SharedPreferences
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mainSharedPreferences = getPreferences(Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences(sharedPreferenceName, Context.MODE_PRIVATE)
 
-        val defaultName = mainSharedPreferences.getString(scrapboxKey, "")
+        val defaultName = sharedPreferences.getString(scrapboxKey, "")
 
         setContent {
-            MainView(defaultName ?: "", mainSharedPreferences)
+            MainView(defaultName ?: "", sharedPreferences)
         }
     }
 }

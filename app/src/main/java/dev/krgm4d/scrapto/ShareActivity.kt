@@ -5,22 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.net.Uri.encode
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -72,8 +65,8 @@ class ShareActivity : ComponentActivity() {
             }
         }
 
-        val scrapboxName =
-            MainActivity.mainSharedPreferences.getString(MainActivity.scrapboxKey, "") ?: ""
+        val sharePreferences = getSharedPreferences(sharedPreferenceName, Context.MODE_PRIVATE)
+        val scrapboxName = sharePreferences.getString(MainActivity.scrapboxKey, "") ?: ""
 
         when (intent?.action) {
             Intent.ACTION_SEND -> {
